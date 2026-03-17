@@ -3,84 +3,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MLF Past Papers Archive</title>
+    <title>MLF Past Papers | IIT Madras</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary: #1e293b;     /* Deep Slate */
+            --secondary: #2563eb;   /* Tech Blue */
+            --bg-color: #f8fafc;    /* Light grayish blue */
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f9fa;
-            color: #333;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         }
+
+        /* Header Styling */
         h1 {
+            color: var(--primary);
             text-align: center;
-            color: #2c3e50;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
         }
-        .instruction-banner {
-            background-color: #e8f4fd;
-            border-left: 5px solid #3498db;
-            padding: 15px;
-            margin-bottom: 30px;
-            border-radius: 4px;
+
+        .print-instruction {
             text-align: center;
-            font-size: 1.1em;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 35px;
+            font-style: italic;
         }
-        .keyboard-shortcut {
-            background-color: #333;
-            color: white;
-            padding: 3px 8px;
+
+        .shortcut {
+            background-color: #f1f5f9;
+            padding: 2px 6px;
             border-radius: 4px;
+            border: 1px solid #cbd5e1;
             font-family: monospace;
-            font-weight: bold;
+            font-weight: 600;
+            color: var(--primary);
         }
-        .paper-list {
-            background: white;
-            padding: 20px 30px;
+
+        /* Accordion (Details/Summary) Styling */
+        details {
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            list-style-type: none;
+            background-color: var(--card-bg);
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
-        .paper-list li {
-            margin: 15px 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+
+        /* Top level accordion */
+        details.main-section > summary {
+            background-color: #f8fafc;
+            font-size: 1.1rem;
+            color: var(--primary);
         }
-        .paper-list li:last-child {
+
+        summary {
+            padding: 16px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none; /* Hides default arrow */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        summary:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* Custom SVG Arrow for Accordions */
+        summary::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+            transition: transform 0.3s ease;
+        }
+
+        details[open] > summary::after {
+            transform: rotate(180deg);
+        }
+
+        /* Hide the default webkit marker */
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        /* Nested Accordions (Quiz 1, Quiz 2, etc.) */
+        .content-wrapper {
+            padding: 15px;
+            background-color: #ffffff;
+        }
+
+        details.sub-section {
+            margin-bottom: 10px;
+            border-color: #f1f5f9;
+        }
+
+        details.sub-section > summary {
+            font-size: 1rem;
+            color: var(--secondary);
+            padding: 12px 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        /* Links List */
+        ul.paper-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.paper-list li {
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        ul.paper-list li:last-child {
             border-bottom: none;
         }
-        .paper-link {
-            text-decoration: none;
-            color: #2980b9;
-            font-size: 18px;
-            font-weight: 500;
+
+        a.paper-link {
             display: flex;
             align-items: center;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
-        .paper-link:hover {
-            color: #1abc9c;
+
+        a.paper-link::before {
+            content: "📄";
+            margin-right: 12px;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        a.paper-link:hover {
+            background-color: #f8fafc;
+            color: var(--secondary);
+            padding-left: 20px; /* Slight indent on hover */
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
             text-decoration: underline;
         }
-        .icon {
-            margin-right: 10px;
-            font-size: 1.2em;
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                border-radius: 8px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <h1>Machine Learning Foundations - Past Papers</h1>
+    <div class="container">
+        <h1>MLF - Machine Learning Foundations</h1>
+        <div class="print-instruction">
+            * Note: Press <span class="shortcut">Ctrl + P</span> (or Cmd + P) while viewing to print or download it.
+        </div>
 
-    <div class="instruction-banner">
-        💡 <strong>Pro Tip:</strong> Click any paper to open it in your browser. <br>
-        Press <span class="keyboard-shortcut">Ctrl + P</span> (Windows) or <span class="keyboard-shortcut">Cmd + P</span> (Mac) to save it to your device or print!
+        <details class="main-section">
+            <summary>Quizwise Papers</summary>
+            
+            <div class="content-wrapper">
+                
+                <details class="sub-section">
+                    <summary>Quiz 1</summary>
+                    <ul class="paper-list">
+                        <li><a href="quizwise/Quiz1/Quiz 1 May22 .pdf" class="paper-link" target="_blank">May 2022</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz 1 Sept22.pdf" class="paper-link" target="_blank">Sept 2022</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz1 Jan23.pdf" class="paper-link" target="_blank">Jan 2023</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz1 May23.pdf" class="paper-link" target="_blank">May 2023</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz1 Sept23.pdf" class="paper-link" target="_blank">Sept 2023</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz1 Jan24.pdf" class="paper-link" target="_blank">Jan 2024</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz1 May24.pdf" class="paper-link" target="_blank">May 2024</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz1 Sept24.pdf" class="paper-link" target="_blank">Sept 2024</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz1 Jan25.pdf" class="paper-link" target="_blank">Jan 2025</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz1 May25.pdf" class="paper-link" target="_blank">May 2025</a></li>
+                        <li><a href="quizwise/Quiz1/Quiz1 Sept25.pdf" class="paper-link" target="_blank">Sept 2025</a></li>                                                                                                                                                                                                                        
+                        </ul>
+                </details>
+
+                <details class="sub-section">
+                    <summary>Quiz 2</summary>
+                    <ul class="paper-list">
+                        <li><a href="quizwise/Quiz2/Quiz 2 May22 .pdf" class="paper-link" target="_blank">May 2022</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz 2 Sept22.pdf" class="paper-link" target="_blank">Sept 2022</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz2 Jan23.pdf" class="paper-link" target="_blank">Jan 2023</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz2 May23.pdf" class="paper-link" target="_blank">May 2023</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz2 Sept23.pdf" class="paper-link" target="_blank">Sept 2023</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz2 Jan24.pdf" class="paper-link" target="_blank">Jan 2024</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz2 May24.pdf" class="paper-link" target="_blank">May 2024</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz2 Sept24.pdf" class="paper-link" target="_blank">Sept 2024</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz2 Jan25.pdf" class="paper-link" target="_blank">Jan 2025</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz2 May25.pdf" class="paper-link" target="_blank">May 2025</a></li>
+                        <li><a href="quizwise/Quiz2/Quiz2 Sept25.pdf" class="paper-link" target="_blank">Sept 2025</a></li>                                                                                                                                                                                                                        
+
+                        </ul>
+                </details>
+
+                <details class="sub-section">
+                    <summary>End Term</summary>
+                    <ul class="paper-list">
+                        <li><a href="quizwise/End Term/ET May22.pdf" class="paper-link" target="_blank">May 2022</a></li>
+                        <li><a href="quizwise/End Term/ET Sept22.pdf" class="paper-link" target="_blank">Sept 2022</a></li>
+                        <li><a href="quizwise/End Term/ET Jan23.pdf" class="paper-link" target="_blank">Jan 2023</a></li>
+                        <li><a href="quizwise/End Term/ET May23.pdf" class="paper-link" target="_blank">May 2023</a></li>
+                        <li><a href="quizwise/End Term/ET Sept23.pdf" class="paper-link" target="_blank">Sept 2023</a></li>
+                        <li><a href="quizwise/End Term/ET Jan24.pdf" class="paper-link" target="_blank">Jan 2024</a></li>
+                        <li><a href="quizwise/End Term/ET May24.pdf" class="paper-link" target="_blank">May 2024</a></li>
+                        <li><a href="quizwise/End Term/ET Sept24.pdf" class="paper-link" target="_blank">Sept 2024</a></li>
+                        <li><a href="quizwise/End Term/ET Jan25.pdf" class="paper-link" target="_blank">Jan 2025</a></li>
+                        <li><a href="quizwise/End Term/ET May25.pdf" class="paper-link" target="_blank">May 2025</a></li>
+                        <li><a href="quizwise/End Term/ET Sept25.pdf" class="paper-link" target="_blank">Sept 2025</a></li>                                                                                                                                                                                                                        
+                    </ul>
+                </details>
+
+            </div>
+        </details>
+
+        <div class="footer">
+            For any issues, please mail on <a href="mailto:23f3004032@ds.study.iitm.ac.in">23f3004032@ds.study.iitm.ac.in</a>
+        </div>
     </div>
 
-    <ul class="paper-list">
-        <li><a href="pdfs/Quiz_1_May22.pdf" class="paper-link" target="_blank"><span class="icon">📄</span> Quiz 1 - May 2022</a></li>
-        <li><a href="pdfs/Quiz_2_Jan23.pdf" class="paper-link" target="_blank"><span class="icon">📄</span> Quiz 2 - Jan 2023</a></li>
-        <li><a href="pdfs/ET_May24.pdf" class="paper-link" target="_blank"><span class="icon">📄</span> End Term - May 2024</a></li>
-        </ul>
+    <script>
+        // Grab all the quiz sub-sections
+        const accordions = document.querySelectorAll('details.sub-section');
 
+        accordions.forEach(accordion => {
+            accordion.addEventListener('toggle', function() {
+                // If the user just opened this specific accordion...
+                if (this.open) {
+                    // ...go through all the other ones and close them
+                    accordions.forEach(otherAccordion => {
+                        if (otherAccordion !== this) {
+                            otherAccordion.open = false;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
 </body>
 </html>
